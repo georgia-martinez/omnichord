@@ -1,28 +1,19 @@
 import React from "react";
-import { Pressable, StatusBar, StyleSheet, Text, View } from "react-native";
-import { useChord } from "./hooks/useChord";
-import { CHORD_TYPE } from "./synth/chords";
+import { StyleSheet, Text, View } from "react-native";
+import { ChordButton } from "./components/ChordButton";
+import { CHORD_ORDER, CHORD_QUALITY, getChordType } from "./synth/chords";
 
-function App(): React.JSX.Element {
-    const { isPlaying, startPlaying, stopPlaying } = useChord(
-        CHORD_TYPE.C_MAJOR
-    );
-
+export default function App() {
     return (
         <View style={styles.container}>
-            <StatusBar barStyle="dark-content" />
-            <Pressable
-                onPressIn={startPlaying}
-                onPressOut={stopPlaying}
-                style={({ pressed }) => [
-                    styles.button,
-                    (pressed || isPlaying) && styles.buttonPressed,
-                ]}
-            >
-                <Text style={styles.buttonText}>
-                    {isPlaying ? "Playing C Major..." : "Press for C Major"}
-                </Text>
-            </Pressable>
+            {CHORD_ORDER.map((chord) => (
+                <View key={chord} style={styles.chordColumn}>
+                    <Text style={styles.chordName}>{chord}</Text>
+                    <ChordButton
+                        chordType={getChordType(chord, CHORD_QUALITY.MAJOR)}
+                    />
+                </View>
+            ))}
         </View>
     );
 }
@@ -30,9 +21,21 @@ function App(): React.JSX.Element {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: "#fff",
+    },
+    chordColumn: {
+        flexDirection: "column",
+        alignItems: "center",
+        marginHorizontal: 4,
+    },
+    chordName: {
+        fontSize: 14,
+        fontWeight: "600",
+        marginBottom: 8,
+        color: "#000",
     },
     button: {
         backgroundColor: "#007AFF",
@@ -52,5 +55,3 @@ const styles = StyleSheet.create({
         fontWeight: "600",
     },
 });
-
-export default App;

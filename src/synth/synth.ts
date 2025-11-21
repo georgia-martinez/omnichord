@@ -22,7 +22,7 @@ export async function playChord(chordType: CHORD_TYPE) {
         if (!context || !gainNode) return;
         
         // Stop any currently playing sounds
-        await stopCMajorChord();
+        await stopChord();
         
         // Create oscillators for each note in the chord
         const frequencies = CHORDS[chordType];
@@ -40,7 +40,7 @@ export async function playChord(chordType: CHORD_TYPE) {
     }
 }
 
-export async function stopCMajorChord() {
+export async function stopChord() {
     try {
         oscillators.forEach((oscillator) => {
             try {
