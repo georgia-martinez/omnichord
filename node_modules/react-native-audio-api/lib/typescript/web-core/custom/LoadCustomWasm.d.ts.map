@@ -1,0 +1,1 @@
+{"version":3,"file":"LoadCustomWasm.d.ts","sourceRoot":"","sources":["../../../../src/web-core/custom/LoadCustomWasm.ts"],"names":[],"mappings":"AAAA,eAAO,MAAM,SAAS,qBAAqB,CAAC;AAG5C,eAAO,IAAI,iBAAiB,EAAE,OAAO,CAAC,IAAI,CAAC,GAAG,IAAW,CAAC;AAE1D,QAAA,MAAM,cAAc,GAAU,aAAY,MAAW,yBA+BpD,CAAC;AAEF,eAAe,cAAc,CAAC"}

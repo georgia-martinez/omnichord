@@ -1,0 +1,1 @@
+{"version":3,"names":["PeriodicWave","constructor","periodicWave","exports","default"],"sourceRoot":"../../../src","sources":["core/PeriodicWave.ts"],"mappings":";;;;;;AAEe,MAAMA,YAAY,CAAC;EAChC;;EAGAC,WAAWA,CAACC,YAA2B,EAAE;IACvC,IAAI,CAACA,YAAY,GAAGA,YAAY;EAClC;AACF;AAACC,OAAA,CAAAC,OAAA,GAAAJ,YAAA","ignoreList":[]}

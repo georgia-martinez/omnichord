@@ -1,0 +1,1 @@
+{"version":3,"names":["InvalidStateError","Error","constructor","message","name"],"sourceRoot":"../../../src","sources":["errors/InvalidStateError.ts"],"mappings":";;AAAA,MAAMA,iBAAiB,SAASC,KAAK,CAAC;EACpCC,WAAWA,CAACC,OAAe,EAAE;IAC3B,KAAK,CAACA,OAAO,CAAC;IACd,IAAI,CAACC,IAAI,GAAG,mBAAmB;EACjC;AACF;AAEA,eAAeJ,iBAAiB","ignoreList":[]}
