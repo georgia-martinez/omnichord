@@ -1,23 +1,21 @@
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { CHORD_TYPE } from "../synth/chords";
 import { playChord, stopChord } from "../synth/synth";
 
-export function useChord(chordType: CHORD_TYPE) {
+export function useChord() {
     const [isPlaying, setIsPlaying] = useState(false);
 
-    const startPlaying = useCallback(async () => {
-        if (!isPlaying) {
+    const startPlaying = (chordType: CHORD_TYPE) => {
             setIsPlaying(true);
-            await playChord(chordType);
-        }
-    }, [isPlaying]);
+            playChord(chordType);
+    }
 
-    const stopPlaying = useCallback(async () => {
+    const stopPlaying = () => {
         if (isPlaying) {
             setIsPlaying(false);
-            await stopChord();
+            stopChord();
         }
-    }, [isPlaying]);
+    }
 
     return {
         isPlaying,

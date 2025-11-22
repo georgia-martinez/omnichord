@@ -5,7 +5,7 @@ let audioContext: AudioContext | null = null;
 let oscillators: OscillatorNode[] = [];
 let gainNode: GainNode | null = null;
 
-async function initializeAudioContext() {
+function initializeAudioContext() {
     if (audioContext) return audioContext;
     
     audioContext = new AudioContext();
@@ -16,13 +16,13 @@ async function initializeAudioContext() {
     return audioContext;
 }
 
-export async function playChord(chordType: CHORD_TYPE) {
+export function playChord(chordType: CHORD_TYPE) {
     try {
-        const context = await initializeAudioContext();
+        const context = initializeAudioContext();
         if (!context || !gainNode) return;
         
         // Stop any currently playing sounds
-        await stopChord();
+        stopChord();
         
         // Create oscillators for each note in the chord
         const frequencies = CHORDS[chordType];
@@ -40,7 +40,7 @@ export async function playChord(chordType: CHORD_TYPE) {
     }
 }
 
-export async function stopChord() {
+export function stopChord() {
     try {
         oscillators.forEach((oscillator) => {
             try {
