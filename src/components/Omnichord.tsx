@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useChord } from "../hooks/useChord";
+import { useStrumplate } from "../hooks/useStrumplate";
 import {
     CHORD_ORDER,
     CHORD_QUALITY,
@@ -8,6 +9,7 @@ import {
     getChordType,
 } from "../synth/chords";
 import { ChordButton } from "./ChordButton";
+import { Strumplate } from "./Strumplate";
 
 export const Omnichord = () => {
     const [activeChord, setActiveChord] = useState<CHORD_TYPE | undefined>(
@@ -15,6 +17,7 @@ export const Omnichord = () => {
     );
 
     const { isPlaying, startPlaying, stopPlaying } = useChord();
+    const { playPlate } = useStrumplate(activeChord);
 
     const handleChordPressed = (chordType: CHORD_TYPE) => {
         setActiveChord(chordType);
@@ -26,17 +29,24 @@ export const Omnichord = () => {
         setActiveChord(undefined);
     };
 
+    const handlePlatePressed = (plateIndex: number) => {
+        playPlate(plateIndex);
+    };
+
     return (
         <View style={styles.container}>
-            {CHORD_ORDER.map((chord) => (
-                <View key={chord} style={styles.chordColumn}>
-                    <Text style={styles.chordName}>{chord}</Text>
-                    <ChordButton
-                        chordType={getChordType(chord, CHORD_QUALITY.MAJOR)}
-                        onPressed={handleChordPressed}
-                    />
-                </View>
-            ))}
+            <View style={styles.chordContainer}>
+                {CHORD_ORDER.map((chord) => (
+                    <View key={chord} style={styles.chordColumn}>
+                        <Text style={styles.chordName}>{chord}</Text>
+                        <ChordButton
+                            chordType={getChordType(chord, CHORD_QUALITY.MAJOR)}
+                            onPressed={handleChordPressed}
+                        />
+                    </View>
+                ))}
+            </View>
+            <Strumplate onPlatePressed={handlePlatePressed} />
             <Pressable onPress={handleStopPressed}>
                 <Text>Stop</Text>
             </Pressable>
@@ -46,6 +56,10 @@ export const Omnichord = () => {
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
+        flexDirection: "row",
+    },
+    chordContainer: {
         flex: 1,
         flexDirection: "row",
         justifyContent: "center",
