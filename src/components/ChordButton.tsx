@@ -1,4 +1,4 @@
-import { Pressable } from "react-native";
+import { Pressable, StyleSheet } from "react-native";
 import { CHORD_TYPE } from "../synth/chords";
 
 interface Props {
@@ -11,15 +11,14 @@ export const ChordButton = (props: Props) => {
         props.onPressed(props.chordType);
     };
 
-    return (
-        <Pressable
-            onPress={onPressed}
-            style={{
-                height: 50,
-                width: 30,
-                backgroundColor: "#007AFF",
-                borderRadius: 2,
-            }}
-        />
-    );
+    return <Pressable onPress={onPressed} style={styles.button} />;
 };
+
+const styles = StyleSheet.create({
+    button: {
+        height: 50,
+        width: 30,
+        backgroundColor: "#a0a5a3",
+        borderRadius: 2,
+    },
+});
