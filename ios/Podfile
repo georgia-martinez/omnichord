@@ -9,6 +9,9 @@ target 'OmnichordTemp' do
     :path => '../node_modules/react-native',
     :hermes_enabled => true
   )
+  
+  # Explicitly add react-native-audio-api
+  pod 'RNAudioAPI', :path => '../node_modules/react-native-audio-api'
 
   post_install do |installer|
     react_native_post_install(installer)
