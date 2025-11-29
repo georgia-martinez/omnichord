@@ -1,5 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { colors } from "../theme/colors";
+import { globalStyles } from "../theme/globalStyles";
 
 interface Props {
     label: string;
@@ -25,7 +26,7 @@ export const LabeledButton = (props: Props) => {
                     },
                 ]}
             />
-            <Text style={styles.label}>{props.label}</Text>
+            <Text style={globalStyles.text}>{props.label}</Text>
         </View>
     );
 };
@@ -33,15 +34,11 @@ export const LabeledButton = (props: Props) => {
 const styles = StyleSheet.create({
     container: {
         alignItems: "center",
+        gap: globalStyles.gap.sm,
     },
     button: {
         borderWidth: 1,
         borderRadius: 2,
         borderColor: colors.black,
-    },
-    label: {
-        fontSize: 14,
-        fontWeight: "600",
-        color: colors.black,
     },
 });

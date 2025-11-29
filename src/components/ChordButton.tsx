@@ -1,11 +1,12 @@
 import { Pressable, StyleSheet } from "react-native";
 import { CHORD_TYPE } from "../synth/chords";
 import { colors } from "../theme/colors";
+import { globalStyles } from "../theme/globalStyles";
 
 export const CHORD_BUTTON_DIMENSIONS = {
     height: 100,
     width: 60,
-    gap: 12,
+    gap: globalStyles.gap.md,
 } as const;
 
 interface Props {

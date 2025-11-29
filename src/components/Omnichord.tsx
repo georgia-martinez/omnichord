@@ -10,6 +10,7 @@ import {
     getChordType,
 } from "../synth/chords";
 import { colors } from "../theme/colors";
+import { globalStyles } from "../theme/globalStyles";
 import { CHORD_BUTTON_DIMENSIONS, ChordButton } from "./ChordButton";
 import { LabeledButton } from "./LabeledButton";
 import { Strumplate } from "./Strumplate";
@@ -39,51 +40,44 @@ export const Omnichord = () => {
     return (
         <View style={styles.container}>
             <View style={styles.container2}>
-                <View style={styles.controlsContainer}>
+                <View
+                    style={[styles.controlsContainer, styles.sectionContainer]}
+                >
                     <LabeledButton
                         label="Stop"
                         onPressIn={handleStopPressed}
                         color={colors.red}
                     />
                 </View>
-                <View
-                    style={{
-                        flexDirection: "row",
-                        marginLeft:
-                            CHORD_BUTTON_DIMENSIONS.width * 1.35 +
-                            CHORD_BUTTON_DIMENSIONS.gap,
-                    }}
-                >
-                    {CHORD_LETTER_ORDER.map((letter) => (
-                        <View
-                            key={letter}
-                            style={{
-                                width:
-                                    CHORD_BUTTON_DIMENSIONS.width +
-                                    CHORD_BUTTON_DIMENSIONS.gap,
-                            }}
-                        >
-                            <Text>{letter}</Text>
-                        </View>
-                    ))}
-                </View>
-                <View style={styles.chordContainer}>
-                    {CHORD_QUALITY_ORDER.map((quality) => (
-                        <View key={quality} style={styles.chordRow}>
-                            <View style={styles.rowHeaderCell}>
-                                <Text style={styles.rowHeaderText}>
-                                    {CHORD_QUALITY_LABELS[quality]}
-                                </Text>
+                <View style={styles.sectionContainer}>
+                    <View style={styles.chordLetterContainer}>
+                        {CHORD_LETTER_ORDER.map((letter) => (
+                            <View key={letter} style={styles.chordLetterCell}>
+                                <Text style={globalStyles.text}>{letter}</Text>
                             </View>
-                            {CHORD_LETTER_ORDER.map((letter) => (
-                                <ChordButton
-                                    key={`${letter}-${quality}`}
-                                    chordType={getChordType(letter, quality)}
-                                    onPressed={handleChordPressed}
-                                />
-                            ))}
-                        </View>
-                    ))}
+                        ))}
+                    </View>
+                    <View style={styles.chordButtonContainer}>
+                        {CHORD_QUALITY_ORDER.map((quality) => (
+                            <View key={quality} style={styles.chordRow}>
+                                <View style={styles.chordQualityCell}>
+                                    <Text style={globalStyles.text}>
+                                        {CHORD_QUALITY_LABELS[quality]}
+                                    </Text>
+                                </View>
+                                {CHORD_LETTER_ORDER.map((letter) => (
+                                    <ChordButton
+                                        key={`${letter}-${quality}`}
+                                        chordType={getChordType(
+                                            letter,
+                                            quality
+                                        )}
+                                        onPressed={handleChordPressed}
+                                    />
+                                ))}
+                            </View>
+                        ))}
+                    </View>
                 </View>
             </View>
             <Strumplate onPlatePressed={handlePlatePressed} />
@@ -98,19 +92,35 @@ const styles = StyleSheet.create({
         paddingVertical: 30,
         paddingHorizontal: 15,
         backgroundColor: colors.background,
-        gap: 15,
+        gap: globalStyles.gap.md,
     },
     container2: {
         flex: 1,
+        gap: globalStyles.gap.md,
     },
     controlsContainer: {
         flexDirection: "row",
         justifyContent: "flex-end",
     },
-    chordContainer: {
+    sectionContainer: {
+        borderWidth: 1,
+        borderRadius: 8,
+        padding: 20,
+    },
+    chordButtonContainer: {
         gap: CHORD_BUTTON_DIMENSIONS.gap,
     },
-    rowHeaderCell: {
+    chordLetterContainer: {
+        flexDirection: "row",
+        marginLeft:
+            CHORD_BUTTON_DIMENSIONS.width * 1.35 + CHORD_BUTTON_DIMENSIONS.gap,
+    },
+    chordLetterCell: {
+        ...globalStyles.text,
+        width: CHORD_BUTTON_DIMENSIONS.width + CHORD_BUTTON_DIMENSIONS.gap,
+        marginBottom: CHORD_BUTTON_DIMENSIONS.gap,
+    },
+    chordQualityCell: {
         height: CHORD_BUTTON_DIMENSIONS.height,
         width: CHORD_BUTTON_DIMENSIONS.width,
         justifyContent: "center",
@@ -119,10 +129,6 @@ const styles = StyleSheet.create({
     chordRow: {
         flexDirection: "row",
         alignItems: "center",
-        gap: CHORD_BUTTON_DIMENSIONS.gap,
-    },
-    rowHeaderText: {
-        fontWeight: "600",
-        color: colors.black,
+        gap: globalStyles.gap.md,
     },
 });
