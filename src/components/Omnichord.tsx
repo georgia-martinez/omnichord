@@ -8,6 +8,7 @@ import {
     CHORD_TYPE,
     getChordType,
 } from "../synth/chords";
+import { colors } from "../theme/colors";
 import { ChordButton } from "./ChordButton";
 import { Strumplate } from "./Strumplate";
 
@@ -35,21 +36,26 @@ export const Omnichord = () => {
 
     return (
         <View style={styles.container}>
-            <View style={styles.chordContainer}>
-                {CHORD_ORDER.map((chord) => (
-                    <View key={chord} style={styles.chordColumn}>
-                        <Text style={styles.chordName}>{chord}</Text>
-                        <ChordButton
-                            chordType={getChordType(chord, CHORD_QUALITY.MAJOR)}
-                            onPressed={handleChordPressed}
-                        />
-                    </View>
-                ))}
+            <View style={styles.container2}>
+                <Pressable onPressIn={handleStopPressed}>
+                    <Text>Stop</Text>
+                </Pressable>
+                <View style={styles.chordContainer}>
+                    {CHORD_ORDER.map((chord) => (
+                        <View key={chord} style={styles.chordColumn}>
+                            <Text style={styles.chordName}>{chord}</Text>
+                            <ChordButton
+                                chordType={getChordType(
+                                    chord,
+                                    CHORD_QUALITY.MAJOR
+                                )}
+                                onPressed={handleChordPressed}
+                            />
+                        </View>
+                    ))}
+                </View>
             </View>
             <Strumplate onPlatePressed={handlePlatePressed} />
-            <Pressable onPress={handleStopPressed}>
-                <Text>Stop</Text>
-            </Pressable>
         </View>
     );
 };
@@ -59,13 +65,15 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "row",
         marginVertical: 22,
+        backgroundColor: colors.background,
+    },
+    container2: {
+        flex: 1,
     },
     chordContainer: {
         flex: 1,
         flexDirection: "row",
         justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "#fff",
     },
     chordColumn: {
         flexDirection: "column",
@@ -76,23 +84,6 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: "600",
         marginBottom: 8,
-        color: "#000",
-    },
-    button: {
-        backgroundColor: "#a0a5a3",
-        paddingHorizontal: 40,
-        paddingVertical: 20,
-        borderRadius: 10,
-        minWidth: 200,
-        alignItems: "center",
-    },
-    buttonPressed: {
-        backgroundColor: "#0051D5",
-        opacity: 0.8,
-    },
-    buttonText: {
-        color: "#fff",
-        fontSize: 18,
-        fontWeight: "600",
+        color: colors.black,
     },
 });

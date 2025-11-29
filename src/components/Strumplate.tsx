@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { LayoutChangeEvent, StyleSheet, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import { colors } from "../theme/colors";
 
 const NUM_PLATES = 12;
 
@@ -66,11 +67,11 @@ const styles = StyleSheet.create({
     },
     plate: {
         flex: 1,
-        backgroundColor: "#a0a5a3",
+        backgroundColor: colors.beige,
         borderBottomWidth: 1,
         borderLeftWidth: 1,
         borderRightWidth: 1,
-        borderColor: "#000",
+        borderColor: colors.black,
     },
     firstPlate: {
         borderTopWidth: 1,
