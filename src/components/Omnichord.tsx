@@ -3,13 +3,14 @@ import { StyleSheet, Text, View } from "react-native";
 import { useChord } from "../hooks/useChord";
 import { useStrumplate } from "../hooks/useStrumplate";
 import {
-    CHORD_ORDER,
-    CHORD_QUALITY,
+    CHORD_LETTER_ORDER,
+    CHORD_QUALITY_LABELS,
+    CHORD_QUALITY_ORDER,
     CHORD_TYPE,
     getChordType,
 } from "../synth/chords";
 import { colors } from "../theme/colors";
-import { ChordButton } from "./ChordButton";
+import { CHORD_BUTTON_DIMENSIONS, ChordButton } from "./ChordButton";
 import { LabeledButton } from "./LabeledButton";
 import { Strumplate } from "./Strumplate";
 
@@ -45,17 +46,42 @@ export const Omnichord = () => {
                         color={colors.red}
                     />
                 </View>
+                <View
+                    style={{
+                        flexDirection: "row",
+                        marginLeft:
+                            CHORD_BUTTON_DIMENSIONS.width * 1.35 +
+                            CHORD_BUTTON_DIMENSIONS.gap,
+                    }}
+                >
+                    {CHORD_LETTER_ORDER.map((letter) => (
+                        <View
+                            key={letter}
+                            style={{
+                                width:
+                                    CHORD_BUTTON_DIMENSIONS.width +
+                                    CHORD_BUTTON_DIMENSIONS.gap,
+                            }}
+                        >
+                            <Text>{letter}</Text>
+                        </View>
+                    ))}
+                </View>
                 <View style={styles.chordContainer}>
-                    {CHORD_ORDER.map((chord) => (
-                        <View key={chord} style={styles.chordColumn}>
-                            <Text style={styles.chordName}>{chord}</Text>
-                            <ChordButton
-                                chordType={getChordType(
-                                    chord,
-                                    CHORD_QUALITY.MAJOR
-                                )}
-                                onPressed={handleChordPressed}
-                            />
+                    {CHORD_QUALITY_ORDER.map((quality) => (
+                        <View key={quality} style={styles.chordRow}>
+                            <View style={styles.rowHeaderCell}>
+                                <Text style={styles.rowHeaderText}>
+                                    {CHORD_QUALITY_LABELS[quality]}
+                                </Text>
+                            </View>
+                            {CHORD_LETTER_ORDER.map((letter) => (
+                                <ChordButton
+                                    key={`${letter}-${quality}`}
+                                    chordType={getChordType(letter, quality)}
+                                    onPressed={handleChordPressed}
+                                />
+                            ))}
                         </View>
                     ))}
                 </View>
@@ -82,19 +108,21 @@ const styles = StyleSheet.create({
         justifyContent: "flex-end",
     },
     chordContainer: {
-        flex: 1,
-        flexDirection: "row",
+        gap: CHORD_BUTTON_DIMENSIONS.gap,
+    },
+    rowHeaderCell: {
+        height: CHORD_BUTTON_DIMENSIONS.height,
+        width: CHORD_BUTTON_DIMENSIONS.width,
         justifyContent: "center",
-    },
-    chordColumn: {
-        flexDirection: "column",
         alignItems: "center",
-        marginHorizontal: 4,
     },
-    chordName: {
-        fontSize: 14,
+    chordRow: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: CHORD_BUTTON_DIMENSIONS.gap,
+    },
+    rowHeaderText: {
         fontWeight: "600",
-        marginBottom: 8,
         color: colors.black,
     },
 });
