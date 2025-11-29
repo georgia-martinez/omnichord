@@ -10,8 +10,8 @@ target 'Omnichord' do
     :hermes_enabled => true
   )
   
-  # Explicitly add react-native-audio-api
   pod 'RNAudioAPI', :path => '../node_modules/react-native-audio-api'
+  pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
 
   post_install do |installer|
     react_native_post_install(installer)

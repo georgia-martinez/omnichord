@@ -11,7 +11,7 @@ export const ChordButton = (props: Props) => {
         props.onPressed(props.chordType);
     };
 
-    return <Pressable onPress={onPressed} style={styles.button} />;
+    return <Pressable onPressIn={onPressed} style={styles.button} />;
 };
 
 const styles = StyleSheet.create({

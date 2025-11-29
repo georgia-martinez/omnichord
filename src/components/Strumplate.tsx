@@ -1,37 +1,78 @@
-import { Pressable, StyleSheet, View } from "react-native";
+import { useRef } from "react";
+import { LayoutChangeEvent, StyleSheet, View } from "react-native";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
 
 const NUM_PLATES = 12;
 
 interface Props {
-    onPlatePressed: (plateIndex: number) => void;
+    onPlatePressed: (index: number) => void;
 }
 
-export const Strumplate = (props: Props) => {
+export const Strumplate = ({ onPlatePressed }: Props) => {
+    const lastTriggered = useRef<number | null>(null);
+    const containerHeight = useRef(0);
+
+    const getPlateIndex = (y: number) => {
+        if (containerHeight.current === 0) return null;
+        const plateHeight = containerHeight.current / NUM_PLATES;
+        let idx = Math.floor(y / plateHeight);
+        if (idx < 0) idx = 0;
+        if (idx >= NUM_PLATES) idx = NUM_PLATES - 1;
+        return NUM_PLATES - 1 - idx;
+    };
+
+    const pan = Gesture.Pan()
+        .onStart((e) => {
+            const idx = getPlateIndex(e.y);
+            if (idx !== null) {
+                lastTriggered.current = idx;
+                onPlatePressed(idx);
+            }
+        })
+        .onUpdate((e) => {
+            const idx = getPlateIndex(e.y);
+            if (idx !== null && idx !== lastTriggered.current) {
+                lastTriggered.current = idx;
+                onPlatePressed(idx);
+            }
+        })
+        .onEnd(() => {
+            lastTriggered.current = null;
+        });
+
     return (
-        <View style={styles.container}>
-            {Array.from({ length: NUM_PLATES }).map((_, index) => (
-                <Pressable
-                    key={index}
-                    style={[styles.plate, index === 0 && styles.firstPlate]}
-                    onPress={() => props.onPlatePressed(NUM_PLATES - 1 - index)}
-                />
-            ))}
-        </View>
+        <GestureDetector gesture={pan}>
+            <View
+                style={styles.container}
+                onLayout={(e: LayoutChangeEvent) => {
+                    containerHeight.current = e.nativeEvent.layout.height;
+                }}
+            >
+                {Array.from({ length: NUM_PLATES }).map((_, index) => (
+                    <View
+                        key={index}
+                        style={[styles.plate, index === 0 && styles.firstPlate]}
+                    />
+                ))}
+            </View>
+        </GestureDetector>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        border: "1px solid #000",
+        flexDirection: "column",
+        width: 150,
     },
     plate: {
-        width: 100,
-        height: 50,
+        flex: 1,
         backgroundColor: "#a0a5a3",
-        borderTopWidth: 1,
-        borderBottomColor: "#000",
+        borderBottomWidth: 1,
+        borderLeftWidth: 1,
+        borderRightWidth: 1,
+        borderColor: "#000",
     },
     firstPlate: {
-        borderTopWidth: 0,
+        borderTopWidth: 1,
     },
 });

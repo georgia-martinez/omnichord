@@ -58,6 +58,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: "row",
+        marginVertical: 22,
     },
     chordContainer: {
         flex: 1,
