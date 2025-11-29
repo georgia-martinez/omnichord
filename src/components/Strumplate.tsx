@@ -21,20 +21,20 @@ export const Strumplate = ({ onPlatePressed }: Props) => {
         return NUM_PLATES - 1 - idx;
     };
 
+    const triggerPlate = (y: number) => {
+        const idx = getPlateIndex(y);
+        if (idx === null || idx === lastTriggered.current) return;
+        lastTriggered.current = idx;
+        onPlatePressed(idx);
+    };
+
     const pan = Gesture.Pan()
-        .onStart((e) => {
-            const idx = getPlateIndex(e.y);
-            if (idx !== null) {
-                lastTriggered.current = idx;
-                onPlatePressed(idx);
-            }
+        .minDistance(0)
+        .onTouchesDown((e) => {
+            triggerPlate(e.changedTouches[0].y);
         })
         .onUpdate((e) => {
-            const idx = getPlateIndex(e.y);
-            if (idx !== null && idx !== lastTriggered.current) {
-                lastTriggered.current = idx;
-                onPlatePressed(idx);
-            }
+            triggerPlate(e.y);
         })
         .onEnd(() => {
             lastTriggered.current = null;
