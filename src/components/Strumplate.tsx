@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { LayoutChangeEvent, StyleSheet, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { colors } from "../theme/colors";
@@ -12,6 +12,7 @@ interface Props {
 export const Strumplate = ({ onPlatePressed }: Props) => {
     const lastTriggered = useRef<number | null>(null);
     const containerHeight = useRef(0);
+    const [activePlate, setActivePlate] = useState<number | null>(null);
 
     const getPlateIndex = (y: number) => {
         if (containerHeight.current === 0) return null;
@@ -24,7 +25,9 @@ export const Strumplate = ({ onPlatePressed }: Props) => {
 
     const triggerPlate = (y: number) => {
         const idx = getPlateIndex(y);
-        if (idx === null || idx === lastTriggered.current) return;
+        if (idx === null) return;
+        setActivePlate(idx);
+        if (idx === lastTriggered.current) return;
         lastTriggered.current = idx;
         onPlatePressed(idx);
     };
@@ -37,8 +40,17 @@ export const Strumplate = ({ onPlatePressed }: Props) => {
         .onUpdate((e) => {
             triggerPlate(e.y);
         })
+        .onTouchesUp(() => {
+            lastTriggered.current = null;
+            setActivePlate(null);
+        })
         .onEnd(() => {
             lastTriggered.current = null;
+            setActivePlate(null);
+        })
+        .onFinalize(() => {
+            lastTriggered.current = null;
+            setActivePlate(null);
         });
 
     return (
@@ -52,7 +64,12 @@ export const Strumplate = ({ onPlatePressed }: Props) => {
                 {Array.from({ length: NUM_PLATES }).map((_, index) => (
                     <View
                         key={index}
-                        style={[styles.plate, index === 0 && styles.firstPlate]}
+                        style={[
+                            styles.plate,
+                            index === 0 && styles.firstPlate,
+                            activePlate === NUM_PLATES - 1 - index &&
+                                styles.platePressed,
+                        ]}
                     />
                 ))}
             </View>
@@ -67,7 +84,7 @@ const styles = StyleSheet.create({
     },
     plate: {
         flex: 1,
-        backgroundColor: colors.beige,
+        backgroundColor: colors.beige100,
         borderBottomWidth: 1,
         borderLeftWidth: 1,
         borderRightWidth: 1,
@@ -75,5 +92,8 @@ const styles = StyleSheet.create({
     },
     firstPlate: {
         borderTopWidth: 1,
+    },
+    platePressed: {
+        backgroundColor: colors.beige200,
     },
 });

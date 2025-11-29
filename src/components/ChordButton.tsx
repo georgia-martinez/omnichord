@@ -19,7 +19,15 @@ export const ChordButton = (props: Props) => {
         props.onPressed(props.chordType);
     };
 
-    return <Pressable onPressIn={onPressed} style={styles.button} />;
+    return (
+        <Pressable
+            onPressIn={onPressed}
+            style={({ pressed }) => [
+                styles.button,
+                pressed && styles.buttonPressed,
+            ]}
+        />
+    );
 };
 
 const styles = StyleSheet.create({
@@ -27,8 +35,11 @@ const styles = StyleSheet.create({
         height: CHORD_BUTTON_DIMENSIONS.height,
         width: CHORD_BUTTON_DIMENSIONS.width,
         backgroundColor: colors.gray400,
-        borderRadius: 2,
+        borderRadius: globalStyles.borderRadius.md,
         borderWidth: 1,
         borderColor: colors.black,
+    },
+    buttonPressed: {
+        backgroundColor: colors.gray500,
     },
 });

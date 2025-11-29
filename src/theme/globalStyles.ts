@@ -6,4 +6,7 @@ export const globalStyles = {
     sm: 4,
     md: 10,
   },
+  borderRadius: {
+    md: 8,
+  }
 }

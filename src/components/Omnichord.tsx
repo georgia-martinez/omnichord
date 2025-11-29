@@ -46,7 +46,8 @@ export const Omnichord = () => {
                     <LabeledButton
                         label="Stop"
                         onPressIn={handleStopPressed}
-                        color={colors.red}
+                        color={colors.red100}
+                        pressedColor={colors.red200}
                     />
                 </View>
                 <View style={styles.sectionContainer}>
@@ -104,7 +105,7 @@ const styles = StyleSheet.create({
     },
     sectionContainer: {
         borderWidth: 1,
-        borderRadius: 8,
+        borderRadius: globalStyles.borderRadius.md,
         padding: 20,
     },
     chordButtonContainer: {

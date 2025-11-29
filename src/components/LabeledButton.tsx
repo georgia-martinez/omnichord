@@ -6,6 +6,7 @@ interface Props {
     label: string;
     onPressIn: () => void;
     color?: string;
+    pressedColor?: string;
     height?: number;
     width?: number;
 }
@@ -17,10 +18,14 @@ export const LabeledButton = (props: Props) => {
         <View style={styles.container}>
             <Pressable
                 onPressIn={props.onPressIn}
-                style={[
+                style={({ pressed }) => [
                     styles.button,
                     {
-                        backgroundColor: props.color ?? colors.gray400,
+                        backgroundColor: pressed
+                            ? props.pressedColor ??
+                              props.color ??
+                              colors.gray400
+                            : props.color ?? colors.gray400,
                         height,
                         width,
                     },
@@ -38,7 +43,7 @@ const styles = StyleSheet.create({
     },
     button: {
         borderWidth: 1,
-        borderRadius: 2,
+        borderRadius: globalStyles.borderRadius.md,
         borderColor: colors.black,
     },
 });
