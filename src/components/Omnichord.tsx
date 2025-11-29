@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { useChord } from "../hooks/useChord";
 import { useStrumplate } from "../hooks/useStrumplate";
 import {
@@ -10,6 +10,7 @@ import {
 } from "../synth/chords";
 import { colors } from "../theme/colors";
 import { ChordButton } from "./ChordButton";
+import { LabeledButton } from "./LabeledButton";
 import { Strumplate } from "./Strumplate";
 
 export const Omnichord = () => {
@@ -37,9 +38,13 @@ export const Omnichord = () => {
     return (
         <View style={styles.container}>
             <View style={styles.container2}>
-                <Pressable onPressIn={handleStopPressed}>
-                    <Text>Stop</Text>
-                </Pressable>
+                <View style={styles.controlsContainer}>
+                    <LabeledButton
+                        label="Stop"
+                        onPressIn={handleStopPressed}
+                        color={colors.red}
+                    />
+                </View>
                 <View style={styles.chordContainer}>
                     {CHORD_ORDER.map((chord) => (
                         <View key={chord} style={styles.chordColumn}>
@@ -64,11 +69,17 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: "row",
-        marginVertical: 22,
+        paddingVertical: 30,
+        paddingHorizontal: 15,
         backgroundColor: colors.background,
+        gap: 15,
     },
     container2: {
         flex: 1,
+    },
+    controlsContainer: {
+        flexDirection: "row",
+        justifyContent: "flex-end",
     },
     chordContainer: {
         flex: 1,
