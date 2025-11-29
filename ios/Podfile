@@ -4,7 +4,7 @@ require_relative '../node_modules/react-native/scripts/react_native_pods'
 
 prepare_react_native_project!
 
-target 'OmnichordTemp' do
+target 'Omnichord' do
   use_react_native!(
     :path => '../node_modules/react-native',
     :hermes_enabled => true
