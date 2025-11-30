@@ -4,9 +4,11 @@ import { useChord } from "../hooks/useChord";
 import { useStrumplate } from "../hooks/useStrumplate";
 import {
     CHORD_LETTER_ORDER,
+    CHORD_LOOKUP,
     CHORD_QUALITY_LABELS,
     CHORD_QUALITY_ORDER,
     CHORD_TYPE,
+    getChordKey,
     getChordType,
 } from "../synth/chords";
 import { colors } from "../theme/colors";
@@ -21,20 +23,24 @@ export const Omnichord = () => {
     );
     const [pressedChords, setPressedButtons] = useState<CHORD_TYPE[]>([]);
 
-    const { isPlaying, startPlaying, stopPlaying } = useChord();
+    const { startPlaying, stopPlaying } = useChord();
     const { playPlate } = useStrumplate(activeChord);
 
     useEffect(() => {
-        console.log(pressedChords);
+        const chordKey = getChordKey(pressedChords);
+
+        if (chordKey in CHORD_LOOKUP) {
+            const chordToPlay = CHORD_LOOKUP[chordKey];
+            startPlaying(chordToPlay);
+            setActiveChord(chordToPlay);
+        }
     }, [pressedChords]);
 
     const handleChordPressed = (chordType: CHORD_TYPE) => {
-        setActiveChord(chordType);
         setPressedButtons((prev) => {
             if (prev.includes(chordType)) return prev;
             return [...prev, chordType];
         });
-        startPlaying(chordType);
     };
 
     const handleChordReleased = (chordType: CHORD_TYPE) => {
