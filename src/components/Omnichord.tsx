@@ -34,6 +34,11 @@ export const Omnichord = () => {
             startPlaying(chordToPlay);
             setActiveChord(chordToPlay);
         }
+
+        if (pressedChords.length === 0) {
+            setActiveChord(undefined);
+            stopPlaying();
+        }
     }, [pressedChords]);
 
     const handleChordPressed = (chordType: CHORD_TYPE) => {
@@ -64,6 +69,7 @@ export const Omnichord = () => {
                 <View
                     style={[styles.controlsContainer, styles.sectionContainer]}
                 >
+                    {/* TODO:  This should only do stuff if sustain is on...? */}
                     <LabeledButton
                         label="Stop"
                         onPressIn={handleStopPressed}
