@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { useChord } from "../hooks/useChord";
 import { useStrumplate } from "../hooks/useStrumplate";
@@ -19,13 +19,28 @@ export const Omnichord = () => {
     const [activeChord, setActiveChord] = useState<CHORD_TYPE | undefined>(
         undefined
     );
+    const [pressedChords, setPressedButtons] = useState<CHORD_TYPE[]>([]);
 
     const { isPlaying, startPlaying, stopPlaying } = useChord();
     const { playPlate } = useStrumplate(activeChord);
 
+    useEffect(() => {
+        console.log(pressedChords);
+    }, [pressedChords]);
+
     const handleChordPressed = (chordType: CHORD_TYPE) => {
         setActiveChord(chordType);
+        setPressedButtons((prev) => {
+            if (prev.includes(chordType)) return prev;
+            return [...prev, chordType];
+        });
         startPlaying(chordType);
+    };
+
+    const handleChordReleased = (chordType: CHORD_TYPE) => {
+        setPressedButtons((prev) =>
+            prev.filter((chord) => chord !== chordType)
+        );
     };
 
     const handleStopPressed = () => {
@@ -74,6 +89,7 @@ export const Omnichord = () => {
                                             quality
                                         )}
                                         onPressed={handleChordPressed}
+                                        onReleased={handleChordReleased}
                                     />
                                 ))}
                             </View>
