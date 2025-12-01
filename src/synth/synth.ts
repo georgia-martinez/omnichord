@@ -1,5 +1,5 @@
 import { AudioContext, BiquadFilterNode, GainNode, OscillatorNode } from "react-native-audio-api";
-import { CHORD_TYPE, CHORDS } from "./chords";
+import { CHORD_TYPE, CHORDS, NOTES } from "./chords";
 
 let audioContext: AudioContext | null = null;
 let oscillators: OscillatorNode[] = [];
@@ -55,7 +55,7 @@ export function playChord(chordType: CHORD_TYPE) {
         
         stopChord();
         
-        const frequencies = CHORDS[chordType];
+        const frequencies = CHORDS[chordType].map((note) => NOTES[note.name][note.octave]);
         
         frequencies.forEach((frequency) => {
             const voice = createVoice(context, frequency, filterNode!);

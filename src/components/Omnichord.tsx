@@ -1,15 +1,14 @@
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { useChord } from "../hooks/useChord";
 import { useStrumplate } from "../hooks/useStrumplate";
 import {
+    CHORD_LABELS,
     CHORD_LETTER_ORDER,
     CHORD_LOOKUP,
-    CHORD_QUALITY_LABELS,
-    CHORD_QUALITY_ORDER,
+    CHORD_ORDER,
     CHORD_TYPE,
     getChordKey,
-    getChordType,
 } from "../synth/chords";
 import { colors } from "../theme/colors";
 import { globalStyles } from "../theme/globalStyles";
@@ -86,26 +85,31 @@ export const Omnichord = () => {
                         ))}
                     </View>
                     <View style={styles.chordButtonContainer}>
-                        {CHORD_QUALITY_ORDER.map((quality) => (
-                            <View key={quality} style={styles.chordRow}>
-                                <View style={styles.chordQualityCell}>
-                                    <Text style={globalStyles.text}>
-                                        {CHORD_QUALITY_LABELS[quality]}
-                                    </Text>
-                                </View>
-                                {CHORD_LETTER_ORDER.map((letter) => (
-                                    <ChordButton
-                                        key={`${letter}-${quality}`}
-                                        chordType={getChordType(
-                                            letter,
-                                            quality
-                                        )}
-                                        onPressed={handleChordPressed}
-                                        onReleased={handleChordReleased}
-                                    />
-                                ))}
-                            </View>
-                        ))}
+                        {Object.entries(CHORD_ORDER).map(
+                            ([quality, chords]) => (
+                                <Fragment key={quality}>
+                                    <View style={styles.chordRow}>
+                                        <View style={styles.chordQualityCell}>
+                                            <Text style={globalStyles.text}>
+                                                {
+                                                    CHORD_LABELS[
+                                                        quality as keyof typeof CHORD_LABELS
+                                                    ]
+                                                }
+                                            </Text>
+                                        </View>
+                                        {chords.map((chord) => (
+                                            <ChordButton
+                                                key={chord}
+                                                chordType={chord}
+                                                onPressed={handleChordPressed}
+                                                onReleased={handleChordReleased}
+                                            />
+                                        ))}
+                                    </View>
+                                </Fragment>
+                            )
+                        )}
                     </View>
                 </View>
             </View>
