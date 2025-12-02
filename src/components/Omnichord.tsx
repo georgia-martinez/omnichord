@@ -1,15 +1,15 @@
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { useChord } from "../hooks/useChord";
 import { useStrumplate } from "../hooks/useStrumplate";
 import {
-    CHORD_LABELS,
+    Chord,
     CHORD_LETTER_ORDER,
-    CHORD_LOOKUP,
-    CHORD_ORDER,
-    CHORD_QUALITY,
     CHORD_TYPE,
-    getChordKey,
+    CHORD_TYPE_LABELS,
+    CHORD_TYPE_ORDER,
+    GET_CHORD_QUALITY,
+    getChordQualityKey,
 } from "../synth/chords";
 import { colors } from "../theme/colors";
 import { globalStyles } from "../theme/globalStyles";
@@ -18,21 +18,31 @@ import { LabeledButton } from "./LabeledButton";
 import { Strumplate } from "./Strumplate";
 
 export const Omnichord = () => {
-    const [activeChord, setActiveChord] = useState<CHORD_TYPE | undefined>(
+    const [activeChord, setActiveChord] = useState<Chord | undefined>(
         undefined
     );
-    const [pressedChords, setPressedButtons] = useState<CHORD_TYPE[]>([]);
+
+    const [pressedChords, setPressedButtons] = useState<Chord[]>([]);
 
     const { startPlaying, stopPlaying } = useChord();
     const { playPlate } = useStrumplate(activeChord);
 
     useEffect(() => {
-        const chordKey = getChordKey(pressedChords);
+        const chordTypes: CHORD_TYPE[] = pressedChords.map(
+            (chord) => chord.type
+        );
 
-        if (chordKey in CHORD_LOOKUP) {
-            const chordToPlay = CHORD_LOOKUP[chordKey];
-            startPlaying(chordToPlay);
-            setActiveChord(chordToPlay);
+        const chordQualityKey = getChordQualityKey(chordTypes);
+
+        if (chordQualityKey in GET_CHORD_QUALITY) {
+            const chordQuality = GET_CHORD_QUALITY[chordQualityKey];
+
+            const newChord = {
+                root: pressedChords[0].root,
+                type: chordQuality,
+            };
+            startPlaying(newChord);
+            setActiveChord(newChord);
         }
 
         if (pressedChords.length === 0) {
@@ -41,26 +51,27 @@ export const Omnichord = () => {
         }
     }, [pressedChords]);
 
-    const handleChordPressed = (chordType: CHORD_TYPE) => {
+    const chordsEqual = (a: Chord, b: Chord) =>
+        a.root === b.root && a.type === b.type;
+
+    const handleChordPressed = (chord: Chord) => {
         setPressedButtons((prev) => {
-            if (prev.includes(chordType)) return prev;
-            return [...prev, chordType];
+            if (prev.some((c) => chordsEqual(c, chord))) return prev;
+            return [...prev, chord];
         });
     };
 
-    const handleChordReleased = (chordType: CHORD_TYPE) => {
-        setPressedButtons((prev) =>
-            prev.filter((chord) => chord !== chordType)
-        );
+    const handleChordReleased = (chord: Chord) => {
+        setPressedButtons((prev) => prev.filter((c) => !chordsEqual(c, chord)));
+    };
+
+    const handlePlatePressed = (plateIndex: number) => {
+        playPlate(plateIndex);
     };
 
     const handleStopPressed = () => {
         stopPlaying();
         setActiveChord(undefined);
-    };
-
-    const handlePlatePressed = (plateIndex: number) => {
-        playPlate(plateIndex);
     };
 
     return (
@@ -86,34 +97,28 @@ export const Omnichord = () => {
                         ))}
                     </View>
                     <View style={styles.chordButtonContainer}>
-                        {(
-                            Object.entries(CHORD_ORDER) as [
-                                CHORD_QUALITY,
-                                CHORD_TYPE[]
-                            ][]
-                        ).map(([quality, chords], index) => (
-                            <Fragment key={quality}>
-                                <View
-                                    style={[
-                                        styles.chordRow,
-                                        { marginLeft: index * 20 },
-                                    ]}
-                                >
-                                    <View style={styles.chordQualityCell}>
-                                        <Text style={globalStyles.text}>
-                                            {CHORD_LABELS[quality]}
-                                        </Text>
-                                    </View>
-                                    {chords.map((chord) => (
-                                        <ChordButton
-                                            key={chord}
-                                            chordType={chord}
-                                            onPressed={handleChordPressed}
-                                            onReleased={handleChordReleased}
-                                        />
-                                    ))}
+                        {CHORD_TYPE_ORDER.map((quality, index) => (
+                            <View
+                                key={quality}
+                                style={[
+                                    styles.chordRow,
+                                    { marginLeft: index * 20 },
+                                ]}
+                            >
+                                <View style={styles.chordQualityCell}>
+                                    <Text style={globalStyles.text}>
+                                        {CHORD_TYPE_LABELS[quality]}
+                                    </Text>
                                 </View>
-                            </Fragment>
+                                {CHORD_LETTER_ORDER.map((letter) => (
+                                    <ChordButton
+                                        key={`${letter}-${quality}`}
+                                        chord={{ root: letter, type: quality }}
+                                        onPressed={handleChordPressed}
+                                        onReleased={handleChordReleased}
+                                    />
+                                ))}
+                            </View>
                         ))}
                     </View>
                 </View>

@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { StyleSheet } from "react-native";
-import { CHORD_TYPE } from "../synth/chords";
+import { Chord } from "../synth/chords";
 import { colors } from "../theme/colors";
 import { globalStyles } from "../theme/globalStyles";
 import { MultiTouchButton } from "./MultiTouchButton";
@@ -12,9 +12,9 @@ export const CHORD_BUTTON_DIMENSIONS = {
 } as const;
 
 interface Props {
-    chordType: CHORD_TYPE;
-    onPressed: (chordType: CHORD_TYPE) => void;
-    onReleased: (chordType: CHORD_TYPE) => void;
+    chord: Chord;
+    onPressed: (chord: Chord) => void;
+    onReleased: (chord: Chord) => void;
 }
 
 export const ChordButton = (props: Props) => {
@@ -25,7 +25,7 @@ export const ChordButton = (props: Props) => {
         if (!activePointers.current.has(pointerId)) {
             activePointers.current.add(pointerId);
             setIsPressed(true);
-            props.onPressed(props.chordType);
+            props.onPressed(props.chord);
         }
     };
 
@@ -34,7 +34,7 @@ export const ChordButton = (props: Props) => {
             activePointers.current.delete(pointerId);
             if (activePointers.current.size === 0) {
                 setIsPressed(false);
-                props.onReleased(props.chordType);
+                props.onReleased(props.chord);
             }
         }
     };

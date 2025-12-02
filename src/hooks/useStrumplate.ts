@@ -1,12 +1,13 @@
 import { useCallback } from "react";
-import { ARPEGGIOS, CHORD_TYPE } from "../synth/chords";
+import { getArpeggio } from "../synth/arpeggios";
+import { Chord } from "../synth/chords";
 import { playNote } from "../synth/synth";
 
-export function useStrumplate(activeChord?: CHORD_TYPE) {
+export function useStrumplate(activeChord?: Chord) {
     const playPlate = useCallback((plateIndex: number) => {
         if (!activeChord) return;
         
-        const arpeggio = ARPEGGIOS[activeChord];
+        const arpeggio = getArpeggio(activeChord);
         if (!arpeggio || plateIndex >= arpeggio.length) return;
         
         const frequency = arpeggio[plateIndex];
