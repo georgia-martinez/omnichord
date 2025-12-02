@@ -80,7 +80,7 @@ export const Strumplate = ({ onPlatePressed }: Props) => {
 const styles = StyleSheet.create({
     container: {
         flexDirection: "column",
-        width: 150,
+        width: 100,
     },
     plate: {
         flex: 1,
